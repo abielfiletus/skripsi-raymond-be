@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs-extra');
 
-const BeritaService = require('./banner.service');
+const BannerService = require('./banner.service');
 
 module.exports = {
 
@@ -9,12 +9,12 @@ module.exports = {
     try {
       const body = JSON.stringify(req.body) !== '{}' ? req.body : req.query;
 
-      const data = await BeritaService.findAll(body);
+      const data = await BannerService.findAll(body);
 
-      return res.code(200).send({
+      return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil mengambil data berita',
+        message: 'Berhasil mengambil data banner',
         data: data,
       });
     } catch (err) {
@@ -24,12 +24,12 @@ module.exports = {
 
   async findOne(req, res, next) {
     try {
-      const data = await BeritaService.findAll({ id: req.params.id, join_user: req.query.join_user });
+      const data = await BannerService.findOne(req.params.id);
 
-      return res.code(200).send({
+      return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil mengambil data detail berita',
+        message: 'Berhasil mengambil data detail banner',
         data: data,
       })
     } catch (err) {
@@ -43,7 +43,7 @@ module.exports = {
     try {
 
       if (!file) {
-        return res.code(412).send({
+        return res.status(412).send({
           status: false,
           code: 412,
           message: 'Ada yang salah dengan inputanmu',
@@ -56,7 +56,7 @@ module.exports = {
       const ext = (path.extname(file.name)).toLowerCase();
 
       if (!['.jpg', '.jpeg', '.png'].includes(ext)) {
-        return res.code(412).send({
+        return res.status(412).send({
           status: false,
           code: 412,
           message: 'Ada yang salah dengan inputanmu',
@@ -66,20 +66,20 @@ module.exports = {
         });
       }
 
-      await file.mv('./assets/news/' + file.name)
+      await file.mv('./assets/banner/' + file.name)
 
-      req.body.image = process.env.SITE_URL + '/assets/news/' + (file ? file.name : 'default.png');
-      const data = await BeritaService.create(req.body);
+      req.body.image = process.env.SITE_URL + '/assets/banner/' + (file ? file.name : 'default.png');
+      const data = await BannerService.create(req.body);
 
-      return res.code(200).send({
+      return res.status(200).send({
         status: true,
         code: 201,
-        message: 'Berhasil membuat berita',
+        message: 'Berhasil membuat banner',
         data: data,
       })
     } catch (err) {
-      if (file && fs.existsSync('./assets/news/' + file.name)) {
-        fs.removeSync('./assets/news/' + file.name)
+      if (file && fs.existsSync('./assets/banner/' + file.name)) {
+        fs.removeSync('./assets/banner/' + file.name)
       }
       next(err);
     }
@@ -93,7 +93,7 @@ module.exports = {
         const ext = (path.extname(file.name)).toLowerCase();
 
         if (!['.jpg', '.jpeg', '.png'].includes(ext)) {
-          return res.code(412).send({
+          return res.status(412).send({
             status: false,
             code: 412,
             message: 'Ada yang salah dengan inputanmu',
@@ -104,10 +104,10 @@ module.exports = {
         }
       }
 
-      const check = await BeritaService.findOne(req.params.id);
+      const check = await BannerService.findOne(req.params.id);
 
       if (!check) {
-        return res.code(412).send({
+        return res.status(412).send({
           status: false,
           code: 412,
           message: 'Ada yang salah dengan inputanmu',
@@ -117,20 +117,20 @@ module.exports = {
         });
       }
 
-      if (file) await file.mv('./assets/news/' + file.name);
+      if (file) await file.mv('./assets/banner/' + file.name);
 
-      req.body.image = process.env.SITE_URL + '/assets/news/' + (file ? file.name : 'default.png');
-      const data = await BeritaService.update(req.params.id, req.body);
+      req.body.image = process.env.SITE_URL + '/assets/banner/' + (file ? file.name : 'default.png');
+      const data = await BannerService.update(req.params.id, req.body);
 
-      return res.code(200).send({
+      return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil mengubah berita',
-        data: data,
+        message: 'Berhasil mengubah banner',
+        data: data[1][0],
       })
     } catch (err) {
-      if (file && fs.existsSync('./assets/news/' + file.name)) {
-        fs.removeSync('./assets/news/' + file.name)
+      if (file && fs.existsSync('./assets/banner/' + file.name)) {
+        fs.removeSync('./assets/banner/' + file.name)
       }
       next(err);
     }
@@ -138,10 +138,10 @@ module.exports = {
 
   async destroy(req, res, next) {
     try {
-      const check = await BeritaService.findOne(req.params.id);
+      const check = await BannerService.findOne(req.params.id);
 
       if (!check) {
-        return res.code(412).send({
+        return res.status(412).send({
           status: false,
           code: 412,
           message: 'Ada yang salah dengan inputanmu',
@@ -151,12 +151,12 @@ module.exports = {
         });
       }
 
-      const data = await BeritaService.destroy(req.params.id);
+      const data = await BannerService.destroy(req.params.id);
 
-      return res.code(200).send({
+      return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil menghapus berita',
+        message: 'Berhasil menghapus banner',
         data: data,
       })
     } catch (err) {

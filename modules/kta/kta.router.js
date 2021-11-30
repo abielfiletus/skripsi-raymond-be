@@ -1,7 +1,7 @@
 const Express = require('express')
 
-const controller = require('./banner.controller')
-const validator = require('./banner.validation')
+const controller = require('./kta.controller')
+const validator = require('./kta.validation')
 const router = new Express.Router()
 
 router.get('/', validator.findAll, controller.findAll);

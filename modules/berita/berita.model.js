@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Berita.association = (models) => {
-    Berita.belongsTo(models.User, { as: 'user' });
+    Berita.belongsTo(models.user, { as: 'user' });
   };
 
   return Berita;

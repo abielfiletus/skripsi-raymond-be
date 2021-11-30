@@ -1,6 +1,6 @@
 const {Op} = require('sequelize');
 
-const { Banner } = require('../../config/db.config');
+const { banner } = require('../../config/db.config');
 
 module.exports = {
 
@@ -14,15 +14,15 @@ module.exports = {
       options['created_by'] = params.created_by;
     }
 
-    return await Banner.findAll(options);
+    return await banner.findAll(options);
   },
 
   async findOne(id) {
-    return await Banner.findOne({ where: { id } });
+    return await banner.findOne({ where: { id } });
   },
 
   async create(body) {
-    return Banner.create(body);
+    return banner.create(body);
   },
 
   async update(id, body) {
@@ -32,11 +32,11 @@ module.exports = {
       if (body[key]) fields[key] = body[key];
     });
 
-    return await Banner.update(fields, { where: { id }, returning: true });
+    return await banner.update(fields, { where: { id }, returning: true });
   },
 
   async destroy(id) {
-    return await Banner.destroy({ where: { id } });
+    return await banner.destroy({ where: { id } });
   }
 
 }

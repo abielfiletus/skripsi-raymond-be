@@ -6,7 +6,7 @@ module.exports = {
 
   async findAll(req, res, next) {
     const validation = [
-      check('title')
+      check('name')
         .optional()
         .isString()
         .withMessage('Harus berupa text')
@@ -26,16 +26,7 @@ module.exports = {
 
   async create(req, res, next) {
     const validation = [
-      check('title')
-        .notEmpty()
-        .withMessage('Tidak boleh kosong')
-        .bail()
-        .isString()
-        .withMessage('Harus berupa text')
-        .bail()
-        .escape()
-        .trim(),
-      check('description')
+      check('name')
         .notEmpty()
         .withMessage('Tidak boleh kosong')
         .bail()
@@ -51,7 +42,7 @@ module.exports = {
 
   async update(req, res, next) {
     const validation = [
-      check('title')
+      check('name')
         .optional()
         .isString()
         .withMessage('Harus berupa text')

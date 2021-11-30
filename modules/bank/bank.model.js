@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-  const Bank = sequelize.define('berita', {
+  const Bank = sequelize.define('bank', {
     name: {
       type: DataTypes.STRING,
       required: true,
@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type: DataTypes.TEXT,
-      required: true,
     },
   }, {
     freezeTableName: true,

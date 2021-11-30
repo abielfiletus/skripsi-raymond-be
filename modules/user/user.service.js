@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 
-const { User } = require('../../config/db.config');
+const { user } = require('../../config/db.config');
 
 module.exports = {
 
@@ -23,19 +23,19 @@ module.exports = {
       where['username'] = { [Op.iLike]: `%${params.username}%` };
     }
 
-    return await User.findAll({ where });
+    return await user.findAll({ where });
   },
 
   async findOne(id) {
-    return await User.findOne({ where: { id } });
+    return await user.findOne({ where: { id } });
   },
 
   async findByEmail(email) {
-    return await User.findOne({ where: { email }, raw: true });
+    return await user.findOne({ where: { email }, raw: true });
   },
 
   async create(body) {
-    return User.create(body);
+    return user.create(body);
   },
 
   async update(id, body) {
@@ -45,11 +45,11 @@ module.exports = {
       if (body[key]) fields[key] = body[key];
     });
 
-    return await User.update(fields, { where: { id }, returning: true });
+    return await user.update(fields, { where: { id }, returning: true });
   },
 
   async destroy(id) {
-    return await User.destroy({ where: { id } });
+    return await user.destroy({ where: { id } });
   }
   
 }

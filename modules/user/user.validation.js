@@ -7,30 +7,35 @@ module.exports = {
   async findAll(req, res, next) {
     const validation = [
       check('first_name')
+        .optional()
         .isString()
         .withMessage('Harus berupa text')
         .bail()
         .escape()
         .trim(),
       check('last_name')
+        .optional()
         .isString()
         .withMessage('Harus berupa text')
         .bail()
         .escape()
         .trim(),
       check('gender')
+        .optional()
         .isString()
         .withMessage('Harus berupa text')
         .bail()
         .escape()
         .trim(),
       check('email')
+        .optional()
         .isString()
         .withMessage('Harus berupa text')
         .bail()
         .escape()
         .trim(),
       check('username')
+        .optional()
         .isString()
         .withMessage('Harus berupa text')
         .bail()
@@ -134,36 +139,42 @@ module.exports = {
   async update(req, res, next) {
     const validation = [
       check('first_name')
+        .optional()
         .isString()
         .withMessage('Harus berupa text')
         .bail()
         .escape()
         .trim(),
       check('last_name')
+        .optional()
         .isString()
         .withMessage('Harus berupa text')
         .bail()
         .escape()
         .trim(),
       check('gender')
+        .optional()
         .isString()
         .withMessage('Harus berupa text')
         .bail()
         .escape()
         .trim(),
       check('email')
+        .optional()
         .isString()
         .withMessage('Harus berupa text')
         .bail()
         .escape()
         .trim(),
       check('username')
+        .optional()
         .isString()
         .withMessage('Harus berupa text')
         .bail()
         .escape()
         .trim(),
       check('no_Telp')
+        .optional()
         .isString()
         .withMessage('Harus berupa text')
         .bail()

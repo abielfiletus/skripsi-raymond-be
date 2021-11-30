@@ -1,7 +1,8 @@
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 
-const UserService = require('./user.service');
+const KtaService = require('./kta.service');
+const BankService = require('../bank/bank.service');
 
 module.exports = {
 
@@ -9,12 +10,12 @@ module.exports = {
     try {
       const body = JSON.stringify(req.body) !== '{}' ? req.body : req.query;
 
-      const data = await UserService.findAll(body);
+      const data = await KtaService.findAll(body);
 
       return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil mengambil data pengguna',
+        message: 'Berhasil mengambil data KTA',
         data: data,
       });
     } catch (err) {
@@ -24,12 +25,12 @@ module.exports = {
 
   async findOne(req, res, next) {
     try {
-      const data = await UserService.findOne(req.params.id);
+      const data = await KtaService.findOne(req.params.id);
 
       return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil mengambil data detail pengguna',
+        message: 'Berhasil mengambil data detail KTA',
         data: data,
       });
     } catch (err) {
@@ -39,27 +40,25 @@ module.exports = {
 
   async create(req, res, next) {
     try {
-      const mock = {
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        gender: req.body.gender,
-        email: req.body.email,
-        no_telp: req.body.no_telp,
-        username: req.body.username,
-        password: req.body.password,
-      };
+      const check = await BankService.findOne({ id: req.body.bank_id });
 
-      const salt = bcrypt.genSaltSync(Number(process.env.SALT_ROUND));
-      mock.password = bcrypt.hashSync(mock.password, salt);
+      if (!check) {
+        return res.status(412).send({
+          status: false,
+          code: 412,
+          message: 'Ada yang salah dengan inputanmu',
+          errors: [
+            { path: 'bank_id', msg: 'Data tidak ditemukan' }
+          ]
+        });
+      }
 
-      let data = await UserService.create(req.body);
-      data = JSON.parse(JSON.stringify(data[1][0]));
-      delete data.password;
+      let data = await KtaService.create(req.body);
 
       return res.status(201).send({
         status: true,
         code: 201,
-        message: 'Berhasil menambahkan data pengguna',
+        message: 'Berhasil menambahkan data KTA',
         data: data,
       })
     } catch (err) {
@@ -69,7 +68,7 @@ module.exports = {
 
   async update(req, res, next) {
     try {
-      const check = await UserService.findOne(req.params.id);
+      let check = await KtaService.findOne(req.params.id);
 
       if (!check) {
         return res.status(412).send({
@@ -82,19 +81,32 @@ module.exports = {
         });
       }
 
+      check = await BankService.findOne({ id: req.body.bank_id });
+
+      if (!check) {
+        return res.status(412).send({
+          status: false,
+          code: 412,
+          message: 'Ada yang salah dengan inputanmu',
+          errors: [
+            { path: 'bank_id', msg: 'Data tidak ditemukan' }
+          ]
+        });
+      }
+
       if (req.body.password) {
         const salt = bcrypt.genSaltSync(Number(process.env.SALT_ROUND));
         req.body.password = bcrypt.hashSync(req.body.password, salt);
       }
 
-      let data = await UserService.update(req.params.id, req.body);
+      let data = await KtaService.update(req.params.id, req.body);
       data = JSON.parse(JSON.stringify(data[1][0]));
       delete data.password;
 
       return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil mengubah data pengguna',
+        message: 'Berhasil mengubah data KTA',
         data: data,
       })
     } catch (err) {
@@ -104,7 +116,7 @@ module.exports = {
 
   async destroy(req, res, next) {
     try {
-      const check = await UserService.findOne(req.params.id);
+      const check = await KtaService.findOne(req.params.id);
 
       if (!check) {
         return res.status(412).send({
@@ -117,12 +129,12 @@ module.exports = {
         });
       }
 
-      const data = await UserService.destroy(req.params.id);
+      const data = await KtaService.destroy(req.params.id);
 
       return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil menghapus data pengguna',
+        message: 'Berhasil menghapus data KTA',
         data: data,
       })
     } catch (err) {
@@ -132,7 +144,7 @@ module.exports = {
 
   async changePassword(req, res, next) {
     try {
-      const check = await UserService.findOne(req.params.id);
+      const check = await KtaService.findOne(req.params.id);
 
       if (!check) {
         return res.status(412).send({
@@ -159,7 +171,7 @@ module.exports = {
       const salt = bcrypt.genSaltSync(process.env.SALT_ROUND);
       const password = bcrypt.hashSync(req.body.password, salt);
 
-      const data = await UserService.update(req.params.id, { password });
+      const data = await KtaService.update(req.params.id, { password });
 
       return res.status(200).send({
         status: true,

@@ -18,7 +18,7 @@ const db = {};
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  process.env.DB_PASS,
   connectionOption
 );
 
@@ -38,8 +38,8 @@ files.map(file => {
 })
 
 Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+  if (db[modelName].association) {
+    db[modelName].association(db);
   }
 });
 

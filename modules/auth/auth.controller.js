@@ -8,10 +8,10 @@ module.exports = {
 
   async login(req, res, next) {
     try {
-      const check = await UserService.findByEmail(req.body.email);
+      let check = await UserService.findByEmail(req.body.email);
 
       if (!check) {
-        return res.code(412).send({
+        return res.status(412).send({
           status: false,
           code: 412,
           message: 'Ada yang salah dengan inputanmu',
@@ -22,7 +22,7 @@ module.exports = {
       }
 
       if (!await bcrypt.compareSync(req.body.password, check.password)) {
-        return res.code(412).send({
+        return res.status(412).send({
           status: false,
           code: 412,
           message: 'Ada yang salah dengan inputanmu',
@@ -32,10 +32,13 @@ module.exports = {
         });
       }
 
+      check = JSON.parse(JSON.stringify(check));
+      delete check.password;
+
       const data = { ...check };
       data.token = await jwt.sign({ id: check.id }, process.env.JWT_SECRET, { algorithm: 'HS256' });
 
-      return res.code(200).send({
+      return res.status(200).send({
         status: true,
         code: 200,
         message: 'Berhasil masuk',
@@ -51,7 +54,7 @@ module.exports = {
       const check = await UserService.findByEmail(req.body.email);
 
       if (check) {
-        return res.code(412).send({
+        return res.status(412).send({
           status: false,
           code: 412,
           message: 'Ada yang salah dengan inputanmu',
@@ -76,7 +79,7 @@ module.exports = {
 
       const data = await UserService.create(mock);
 
-      return res.code(201).send({
+      return res.status(201).send({
         status: true,
         code: 201,
         message: 'Berhasil mendaftar ke aplikasi',

@@ -12,7 +12,7 @@ module.exports = {
 
       const data = await BeritaService.findAll(body);
 
-      return res.code(200).send({
+      return res.status(200).send({
         status: true,
         code: 200,
         message: 'Berhasil mengambil data berita',
@@ -25,9 +25,9 @@ module.exports = {
 
   async findOne(req, res, next) {
     try {
-      const data = await BeritaService.findAll({ id: req.params.id, join_user: req.query.join_user });
+      const data = await BeritaService.findOne({ id: req.params.id, join_user: req.query.join_user });
 
-      return res.code(200).send({
+      return res.status(200).send({
         status: true,
         code: 200,
         message: 'Berhasil mengambil data detail berita',
@@ -44,7 +44,7 @@ module.exports = {
     try {
 
       if (!file) {
-        return res.code(412).send({
+        return res.status(412).send({
           status: false,
           code: 412,
           message: 'Ada yang salah dengan inputanmu',
@@ -57,7 +57,7 @@ module.exports = {
       const ext = (path.extname(file.name)).toLowerCase();
 
       if (!['.jpg', '.jpeg', '.png'].includes(ext)) {
-        return res.code(412).send({
+        return res.status(412).send({
           status: false,
           code: 412,
           message: 'Ada yang salah dengan inputanmu',
@@ -69,7 +69,7 @@ module.exports = {
 
       await file.mv('./assets/news/' + file.name)
 
-      const header = req.headers.Authorization;
+      const header = req.headers.authorization;
       const authorization = header.split(' ')[1];
       const decoded = await jwt.decode(authorization);
 
@@ -77,7 +77,7 @@ module.exports = {
       req.body.image = process.env.SITE_URL + '/assets/news/' + (file ? file.name : 'default.png');
       const data = await BeritaService.create(req.body);
 
-      return res.code(200).send({
+      return res.status(200).send({
         status: true,
         code: 201,
         message: 'Berhasil membuat berita',
@@ -99,7 +99,7 @@ module.exports = {
         const ext = (path.extname(file.name)).toLowerCase();
 
         if (!['.jpg', '.jpeg', '.png'].includes(ext)) {
-          return res.code(412).send({
+          return res.status(412).send({
             status: false,
             code: 412,
             message: 'Ada yang salah dengan inputanmu',
@@ -110,10 +110,10 @@ module.exports = {
         }
       }
 
-      const check = await BeritaService.findOne(req.params.id);
+      const check = await BeritaService.findOne({ id: req.params.id });
 
       if (!check) {
-        return res.code(412).send({
+        return res.status(412).send({
           status: false,
           code: 412,
           message: 'Ada yang salah dengan inputanmu',
@@ -125,7 +125,7 @@ module.exports = {
 
       if (file) await file.mv('./assets/news/' + file.name);
 
-      const header = req.headers.Authorization;
+      const header = req.headers.authorization;
       const authorization = header.split(' ')[1];
       const decoded = await jwt.decode(authorization);
 
@@ -133,11 +133,11 @@ module.exports = {
       req.body.image = process.env.SITE_URL + '/assets/news/' + (file ? file.name : 'default.png');
       const data = await BeritaService.update(req.params.id, req.body);
 
-      return res.code(200).send({
+      return res.status(200).send({
         status: true,
         code: 200,
         message: 'Berhasil mengubah berita',
-        data: data,
+        data: data[1][0],
       })
     } catch (err) {
       if (file && fs.existsSync('./assets/news/' + file.name)) {
@@ -149,10 +149,10 @@ module.exports = {
 
   async destroy(req, res, next) {
     try {
-      const check = await BeritaService.findOne(req.params.id);
+      const check = await BeritaService.findOne({ id: req.params.id });
 
       if (!check) {
-        return res.code(412).send({
+        return res.status(412).send({
           status: false,
           code: 412,
           message: 'Ada yang salah dengan inputanmu',
@@ -164,7 +164,7 @@ module.exports = {
 
       const data = await BeritaService.destroy(req.params.id);
 
-      return res.code(200).send({
+      return res.status(200).send({
         status: true,
         code: 200,
         message: 'Berhasil menghapus berita',

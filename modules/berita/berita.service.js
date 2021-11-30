@@ -1,6 +1,6 @@
 const {Op} = require('sequelize');
 
-const { Berita, User } = require('../../config/db.config');
+const { berita, user } = require('../../config/db.config');
 
 module.exports = {
 
@@ -14,24 +14,24 @@ module.exports = {
       options['created_by'] = params.created_by;
     }
     if (params.hasOwnProperty('join_user') && params.join_user) {
-      options.include = { model: User, as: 'user' };
+      options.include = { model: user, as: 'user' };
     }
 
-    return await Berita.findAll(options);
+    return await berita.findAll(options);
   },
 
   async findOne(params) {
     const options = { where: { id: params.id } };
 
     if (params.hasOwnProperty('join_user') && params.join_user) {
-      options.include = { model: User, as: 'user' };
+      options.include = { model: user, as: 'user' };
     }
 
-    return await Berita.findOne(options);
+    return await berita.findOne(options);
   },
 
   async create(body) {
-    return Berita.create(body);
+    return berita.create(body);
   },
 
   async update(id, body) {
@@ -41,11 +41,11 @@ module.exports = {
       if (body[key]) fields[key] = body[key];
     });
 
-    return await Berita.update(fields, { where: { id }, returning: true });
+    return await berita.update(fields, { where: { id }, returning: true });
   },
 
   async destroy(id) {
-    return await Berita.destroy({ where: { id } });
+    return await berita.destroy({ where: { id } });
   }
 
 }
