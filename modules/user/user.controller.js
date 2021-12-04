@@ -2,6 +2,7 @@ require('dotenv').config();
 const bcrypt = require('bcryptjs');
 
 const UserService = require('./user.service');
+const path = require("path");
 
 module.exports = {
 
@@ -68,7 +69,24 @@ module.exports = {
   },
 
   async update(req, res, next) {
+    const file = req.files ? req.files['avatar'] : null
+
     try {
+      if (file) {
+        const ext = (path.extname(file.name)).toLowerCase();
+
+        if (!['.jpg', '.jpeg', '.png'].includes(ext)) {
+          return res.status(412).send({
+            status: false,
+            code: 412,
+            message: 'Ada yang salah dengan inputanmu',
+            errors: [
+              { path: 'avatar', msg: 'Ekstensi gambar tidak hanya boleh jpg, jpeg atau png' }
+            ]
+          });
+        }
+      }
+
       const check = await UserService.findOne(req.params.id);
 
       if (!check) {
@@ -85,6 +103,11 @@ module.exports = {
       if (req.body.password) {
         const salt = bcrypt.genSaltSync(Number(process.env.SALT_ROUND));
         req.body.password = bcrypt.hashSync(req.body.password, salt);
+      }
+
+      if (file) {
+        await file.mv('./assets/avatar/' + file.name);
+        req.body.avatar = process.env.SITE_URL + '/assets/avatar/' + file.name;
       }
 
       let data = await UserService.update(req.params.id, req.body);
