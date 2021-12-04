@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       required: true,
     },
-    description: {
-      type: DataTypes.TEXT,
+    link: {
+      type: DataTypes.STRING,
       required: true,
     },
     created_by: {
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Berita.association = (models) => {
-    Berita.belongsTo(models.user, { as: 'user' });
+    Berita.belongsTo(models.user, { as: 'user', foreignKey: 'created_by' });
   };
 
   return Berita;

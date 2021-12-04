@@ -35,7 +35,7 @@ module.exports = {
         .bail()
         .escape()
         .trim(),
-      check('description')
+      check('link')
         .notEmpty()
         .withMessage('Tidak boleh kosong')
         .bail()
@@ -58,7 +58,7 @@ module.exports = {
         .bail()
         .escape()
         .trim(),
-      check('description')
+      check('link')
         .optional()
         .isString()
         .withMessage('Harus berupa text')
