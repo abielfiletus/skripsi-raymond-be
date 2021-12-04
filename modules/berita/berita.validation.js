@@ -42,7 +42,6 @@ module.exports = {
         .isString()
         .withMessage('Harus berupa text')
         .bail()
-        .escape()
         .trim(),
     ];
 
@@ -63,7 +62,6 @@ module.exports = {
         .isString()
         .withMessage('Harus berupa text')
         .bail()
-        .escape()
         .trim(),
     ];
 
