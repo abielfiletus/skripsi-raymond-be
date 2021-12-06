@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const KtaService = require('./kta.service');
 const BankService = require('../bank/bank.service');
+const {pin} = require("nodemon/lib/version");
 
 module.exports = {
 
@@ -32,7 +33,8 @@ module.exports = {
       const pinjaman = Number(body.pinjaman);
       const tenor = Number(body.tenor);
       const interest = Number(body.bunga);
-      const cicilan = Math.round((pinjaman * tenor * interest) / (tenor));
+      const interestValue = pinjaman * interest * tenor;
+      const cicilan = Math.round((pinjaman + interestValue) / (tenor));
 
       return res.status(200).send({
         status: true,
