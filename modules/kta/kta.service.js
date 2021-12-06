@@ -11,16 +11,16 @@ module.exports = {
       options.where['$bank.name$'] = { [Op.iLike]: `%${params.bank_name}%` };
     }
     if (params.hasOwnProperty('tenor') && params.tenor) {
-      options.where['$kta_interest.tenor_min$'] = { [Op.gte]: params.tenor };
-      options.where['$kta_interest.tenor_max$'] = { [Op.lte]: params.tenor };
+      options.where['$kta_interest.tenor_min$'] = { [Op.gte]: Number(params.tenor) };
+      options.where['$kta_interest.tenor_max$'] = { [Op.lte]: Number(params.tenor) };
     }
     if (params.hasOwnProperty('pinjaman') && params.pinjaman) {
-      options.where['$kta_interest.pinjaman_min$'] = { [Op.gte]: params.pinjaman };
-      options.where['$kta_interest.pinjaman_max$'] = { [Op.lte]: params.pinjaman };
+      options.where['$kta_interest.pinjaman_min$'] = { [Op.gte]: Number(params.pinjaman) };
+      options.where['$kta_interest.pinjaman_max$'] = { [Op.lte]: Number(params.pinjaman) };
     }
     if (params.hasOwnProperty('bunga') && params.bunga) {
-      options.where['$kta_interest.suku_bunga$'] = { [Op.lte]: params.bunga };
-      options.where['$kta_interest.suku_bunga$'] = { [Op.gte]: params.bunga };
+      options.where['$kta_interest.suku_bunga$'] = { [Op.lte]: Number(params.bunga) };
+      options.where['$kta_interest.suku_bunga$'] = { [Op.gte]: Number(params.bunga) };
     }
 
     return await kta.findAll(options);
