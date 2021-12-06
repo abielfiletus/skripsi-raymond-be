@@ -23,6 +23,34 @@ module.exports = {
     }
   },
 
+  async recommendation(req, res, next) {
+    try {
+      const body = JSON.stringify(req.body) !== '{}' ? req.body : req.query;
+
+      const data = await KtaService.findAll(body);
+
+      const pinjaman = Number(body.pinjaman);
+      const tenor = Number(body.tenor);
+      const interest = Number(body.bunga);
+      const cicilan = Math.round((pinjaman * tenor * interest) / (tenor));
+
+      return res.status(200).send({
+        status: true,
+        code: 200,
+        message: 'Berhasil mengambil data rekomendasi',
+        data: {
+          pinjaman: pinjaman,
+          tenor: tenor,
+          interest: interest,
+          cicilan: cicilan,
+          bank: data,
+        }
+      })
+    } catch (err) {
+      next(err);
+    }
+  },
+
   async findOne(req, res, next) {
     try {
       const data = await KtaService.findOne(req.params.id);

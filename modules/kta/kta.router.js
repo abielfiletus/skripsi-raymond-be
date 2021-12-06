@@ -6,6 +6,7 @@ const router = new Express.Router()
 
 router.get('/', validator.findAll, controller.findAll);
 router.get('/:id', controller.findOne);
+router.get('/recommendation', controller.recommendation);
 
 router.post('/', validator.create, controller.create);
 
