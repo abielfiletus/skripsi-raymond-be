@@ -19,8 +19,8 @@ module.exports = {
       options.where['$kta_interest.pinjaman_max$'] = { [Op.lte]: params.pinjaman };
     }
     if (params.hasOwnProperty('bunga') && params.bunga) {
-      options.where['$kta_interest.suku_bunga'] = { [Op.lte]: params.bunga };
-      options.where['$kta_interest.suku_bunga'] = { [Op.gte]: params.bunga };
+      options.where['$kta_interest.suku_bunga$'] = { [Op.lte]: params.bunga };
+      options.where['$kta_interest.suku_bunga$'] = { [Op.gte]: params.bunga };
     }
 
     return await kta.findAll(options);
