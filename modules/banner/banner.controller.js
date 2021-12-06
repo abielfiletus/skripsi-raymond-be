@@ -66,7 +66,7 @@ module.exports = {
         });
       }
 
-      await file.mv('./assets/banner/' + file.name)
+      await file.mv('./assets/banner/' + Date.now() + ext);
 
       req.body.image = process.env.SITE_URL + '/assets/banner/' + (file ? file.name : 'default.png');
       const data = await BannerService.create(req.body);
@@ -89,8 +89,9 @@ module.exports = {
     const file = req.files ? req.files['image'] : null
 
     try {
+      let ext;
       if (file) {
-        const ext = (path.extname(file.name)).toLowerCase();
+        ext = (path.extname(file.name)).toLowerCase();
 
         if (!['.jpg', '.jpeg', '.png'].includes(ext)) {
           return res.status(412).send({
@@ -117,7 +118,7 @@ module.exports = {
         });
       }
 
-      if (file) await file.mv('./assets/banner/' + file.name);
+      if (file) await file.mv('./assets/banner/' + Date.now() + ext);
 
       req.body.image = process.env.SITE_URL + '/assets/banner/' + (file ? file.name : 'default.png');
       const data = await BannerService.update(req.params.id, req.body);

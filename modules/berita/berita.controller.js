@@ -67,7 +67,7 @@ module.exports = {
         });
       }
 
-      await file.mv('./assets/news/' + file.name)
+      await file.mv('./assets/news/' + Date.now() + ext);
 
       const header = req.headers.authorization;
       const authorization = header.split(' ')[1];
@@ -95,8 +95,9 @@ module.exports = {
     const file = req.files ? req.files['image'] : null
 
     try {
+      let ext;
       if (file) {
-        const ext = (path.extname(file.name)).toLowerCase();
+        ext = (path.extname(file.name)).toLowerCase();
 
         if (!['.jpg', '.jpeg', '.png'].includes(ext)) {
           return res.status(412).send({
@@ -123,7 +124,7 @@ module.exports = {
         });
       }
 
-      if (file) await file.mv('./assets/news/' + file.name);
+      if (file) await file.mv('./assets/news/' + Date.now() + ext);
 
       const header = req.headers.authorization;
       const authorization = header.split(' ')[1];
