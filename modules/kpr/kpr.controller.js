@@ -42,13 +42,14 @@ module.exports = {
       let totalBayar = 0;
       for (let i = 0; i < tenor * 12; i++) {
         const pmt = await KprFunc.pmt(interest / 12, i + 1, totalPinjaman, 0);
-        const ipmtForPpmt = await KprFunc.ipmt(totalPinjaman, pmt, interest + 1, i - 1);
-        const ppmt = await KprFunc.ppmt(pmt, ipmtForPpmt) * -1;
-        const ipmt = await KprFunc.ipmt(totalPinjaman, pmt, interest * 12, i + 1) * -1;
+        const ipmtForPpmt = await KprFunc.ipmt(totalPinjaman, pmt, interest / 12, i);
+        const ppmt = await KprFunc.ppmt(pmt, ipmtForPpmt);
+        const ipmt = await KprFunc.ipmt(totalPinjaman, pmt, interest / 12, i + 1);
         pokok += ppmt;
         bunga += ipmt;
         cicilan = ppmt + ipmt;
         totalBayar += cicilan;
+        console.log({pmt, ipmtForPpmt, ppmt, ipmt, pokok, bunga, cicilan, totalBayar, totalPinjaman});
       }
 
       return res.status(200).send({
