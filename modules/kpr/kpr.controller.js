@@ -1,8 +1,9 @@
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 
-const KtaService = require('./kta.service');
+const KprService = require('./kpr.service');
 const BankService = require('../bank/bank.service');
+const KprFunc = require('../../util/kpr.function.util');
 
 module.exports = {
 
@@ -10,12 +11,12 @@ module.exports = {
     try {
       const body = JSON.stringify(req.body) !== '{}' ? req.body : req.query;
 
-      const data = await KtaService.findAll(body);
+      const data = await KprService.findAll(body);
 
       return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil mengambil data KTA',
+        message: 'Berhasil mengambil data KPR',
         data: data,
       });
     } catch (err) {
@@ -27,23 +28,38 @@ module.exports = {
     try {
       const body = JSON.stringify(req.body) !== '{}' ? req.body : req.query;
 
-      const data = await KtaService.findAll(body);
+      const data = await KprService.findAll(body);
 
-      const pinjaman = Number(body.pinjaman);
+      const hargaRumah = Number(body.harga_rumah);
       const tenor = Number(body.tenor);
       const interest = Number(body.bunga);
-      const interestValue = pinjaman * interest * tenor;
-      const cicilan = Math.round((pinjaman + interestValue) / (tenor));
+      const dp = Number(body.dp);
+      const totalPinjaman = hargaRumah - (hargaRumah * dp);
+
+      let pokok = 0;
+      let bunga = 0;
+      let cicilan = 0;
+      let totalBayar = 0;
+      for (let i = 0; i < tenor * 12; i++) {
+        const pmt = KprFunc.pmt(tenor / 12, i + 1, tenor * 12, totalPinjaman);
+        const ppmt = KprFunc.ppmt(tenor * 12, pmt, tenor / 12, i + 1);
+        const ipmt = KprFunc.ipmt(tenor * 12, pmt, i + 1);
+        pokok += ppmt;
+        bunga += ipmt;
+        cicilan = ppmt + ipmt;
+        totalBayar += cicilan;
+      }
 
       return res.status(200).send({
         status: true,
         code: 200,
         message: 'Berhasil mengambil data rekomendasi',
         data: {
-          pinjaman: pinjaman,
+          harga_rumah: hargaRumah,
           tenor: tenor,
           interest: interest,
           cicilan: cicilan,
+          dp: dp,
           bank: data,
         }
       })
@@ -54,12 +70,12 @@ module.exports = {
 
   async findOne(req, res, next) {
     try {
-      const data = await KtaService.findOne(req.params.id);
+      const data = await KprService.findOne(req.params.id);
 
       return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil mengambil data detail KTA',
+        message: 'Berhasil mengambil data detail KPR',
         data: data,
       });
     } catch (err) {
@@ -82,12 +98,12 @@ module.exports = {
         });
       }
 
-      let data = await KtaService.create(req.body);
+      let data = await KprService.create(req.body);
 
       return res.status(201).send({
         status: true,
         code: 201,
-        message: 'Berhasil menambahkan data KTA',
+        message: 'Berhasil menambahkan data KPR',
         data: data,
       })
     } catch (err) {
@@ -97,7 +113,7 @@ module.exports = {
 
   async update(req, res, next) {
     try {
-      let check = await KtaService.findOne(req.params.id);
+      let check = await KprService.findOne(req.params.id);
 
       if (!check) {
         return res.status(412).send({
@@ -128,14 +144,14 @@ module.exports = {
         req.body.password = bcrypt.hashSync(req.body.password, salt);
       }
 
-      let data = await KtaService.update(req.params.id, req.body);
+      let data = await KprService.update(req.params.id, req.body);
       data = JSON.parse(JSON.stringify(data[1][0]));
       delete data.password;
 
       return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil mengubah data KTA',
+        message: 'Berhasil mengubah data KPR',
         data: data,
       })
     } catch (err) {
@@ -145,7 +161,7 @@ module.exports = {
 
   async destroy(req, res, next) {
     try {
-      const check = await KtaService.findOne(req.params.id);
+      const check = await KprService.findOne(req.params.id);
 
       if (!check) {
         return res.status(412).send({
@@ -158,12 +174,12 @@ module.exports = {
         });
       }
 
-      const data = await KtaService.destroy(req.params.id);
+      const data = await KprService.destroy(req.params.id);
 
       return res.status(200).send({
         status: true,
         code: 200,
-        message: 'Berhasil menghapus data KTA',
+        message: 'Berhasil menghapus data KPR',
         data: data,
       })
     } catch (err) {
@@ -173,7 +189,7 @@ module.exports = {
 
   async changePassword(req, res, next) {
     try {
-      const check = await KtaService.findOne(req.params.id);
+      const check = await KprService.findOne(req.params.id);
 
       if (!check) {
         return res.status(412).send({
@@ -200,7 +216,7 @@ module.exports = {
       const salt = bcrypt.genSaltSync(process.env.SALT_ROUND);
       const password = bcrypt.hashSync(req.body.password, salt);
 
-      const data = await KtaService.update(req.params.id, { password });
+      const data = await KprService.update(req.params.id, { password });
 
       return res.status(200).send({
         status: true,
