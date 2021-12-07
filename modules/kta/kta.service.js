@@ -11,11 +11,11 @@ module.exports = {
       options.where['$bank.name$'] = { [Op.iLike]: `%${params.bank_name}%` };
     }
     if (params.hasOwnProperty('tenor') && params.tenor) {
-      options.where['$kta_interest.tenor_min$'] = { [Op.gte]: Number(params.tenor) };
-      // options.where['$kta_interest.tenor_max$'] = { [Op.lte]: Number(params.tenor) };
+      options.where['$kta_interest.tenor_min$'] = { [Op.lte]: Number(params.tenor) };
+      options.where['$kta_interest.tenor_max$'] = { [Op.gte]: Number(params.tenor) };
     }
     if (params.hasOwnProperty('pinjaman') && params.pinjaman) {
-      // options.where['$kta_interest.pinjaman_min$'] = { [Op.gte]: Number(params.pinjaman) };
+      options.where['$kta_interest.pinjaman_min$'] = { [Op.lte]: Number(params.pinjaman) };
       options.where['$kta_interest.pinjaman_max$'] = { [Op.gte]: Number(params.pinjaman) };
     }
     if (params.hasOwnProperty('bunga') && params.bunga) {
