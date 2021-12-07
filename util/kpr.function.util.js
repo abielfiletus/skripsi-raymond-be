@@ -21,8 +21,7 @@ module.exports = {
     return 0 - (present * tmp * rate + pmt * (tmp - 1));
   },
 
-  async ppmt(present, pmt, rate, per) {
-    const ipmt = this.ppmt(present, pmt, rate, per - 1);
+  async ppmt(pmt, ipmt) {
     return pmt - ipmt;
   }
 
