@@ -14,6 +14,7 @@ const beritaRouter = require('./modules/berita/berita.router');
 const bankRouter = require('./modules/bank/bank.router');
 const bannerRouter = require('./modules/banner/banner.router');
 const ktaRouter = require('./modules/kta/kta.router');
+const kprRouter = require('./modules/kpr/kpr.router');
 const server = new Express();
 
 server.use(helmet());
@@ -37,6 +38,7 @@ server.use('/api/user', userRouter);
 server.use('/api/berita', beritaRouter);
 server.use('/api/bank', bankRouter);
 server.use('/api/kta', ktaRouter);
+server.use('/api/kpr', kprRouter);
 
 server.use((req, res) => {
   return res.status(404).send({
