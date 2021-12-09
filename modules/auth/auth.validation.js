@@ -72,7 +72,7 @@ module.exports = {
         .bail()
         .escape()
         .trim(),
-      check('no_Telp')
+      check('no_telp')
         .notEmpty()
         .withMessage('Tidak boleh kosong')
         .bail()
