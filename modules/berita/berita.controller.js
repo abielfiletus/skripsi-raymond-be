@@ -67,7 +67,7 @@ module.exports = {
         });
       }
 
-      await file.mv('./assets/news/' + Date.now() + ext);
+      await file.mv('./assets/news/' + file.name + ext);
 
       const header = req.headers.authorization;
       const authorization = header.split(' ')[1];
@@ -124,7 +124,7 @@ module.exports = {
         });
       }
 
-      if (file) await file.mv('./assets/news/' + Date.now() + ext);
+      if (file) await file.mv('./assets/news/' + file.name + ext);
 
       const header = req.headers.authorization;
       const authorization = header.split(' ')[1];

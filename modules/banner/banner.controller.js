@@ -66,7 +66,7 @@ module.exports = {
         });
       }
 
-      await file.mv('./assets/banner/' + Date.now() + ext);
+      await file.mv('./assets/banner/' + file.name + ext);
 
       req.body.image = process.env.SITE_URL + '/assets/banner/' + (file ? file.name : 'default.png');
       const data = await BannerService.create(req.body);
@@ -118,7 +118,7 @@ module.exports = {
         });
       }
 
-      if (file) await file.mv('./assets/banner/' + Date.now() + ext);
+      if (file) await file.mv('./assets/banner/' + file.name + ext);
 
       req.body.image = process.env.SITE_URL + '/assets/banner/' + (file ? file.name : 'default.png');
       const data = await BannerService.update(req.params.id, req.body);
